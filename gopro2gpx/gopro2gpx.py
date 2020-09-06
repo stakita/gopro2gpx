@@ -37,6 +37,9 @@ def BuildGPSPoints(data, skip=False):
      - GPS5     GPS Data
     """
 
+    last_lat = None
+    last_lon = None
+
     points = []
     SCAL = fourCC.XYZData(1.0, 1.0, 1.0)
     GPSU = None
@@ -81,9 +84,21 @@ def BuildGPSPoints(data, skip=False):
                 
 
                 gpsdata = fourCC.GPSData._make(retdata)
+                # print('SMT-000:lat = ' + repr(gpsdata.lat) + ' lon = ' + repr(gpsdata.lon))
+                if last_lat is not None and abs(abs(last_lat) - abs(gpsdata.lat)) > 1.0:
+                    print('BIG LAT SKIP: last_lat = %f  gpsdata.lat = %f' % (last_lat, gpsdata.lat))
+                    print('skipping')
+                    continue
+                if last_lon is not None and abs(abs(last_lon) - abs(gpsdata.lon)) > 1.0:
+                    print('BIG LON SKIP: last_lon = %f  gpsdata.lon = %f' % (last_lon, gpsdata.lon))
+                    print('skipping')
+                    continue
+
                 p = gpshelper.GPSPoint(gpsdata.lat, gpsdata.lon, gpsdata.alt, datetime.fromtimestamp(time.mktime(GPSU)), gpsdata.speed)
                 points.append(p)
                 stats['ok'] += 1
+                last_lat = gpsdata.lat
+                last_lon = gpsdata.lon
 
         elif d.fourCC == 'SYST':
             data = [ float(x) / float(y) for x,y in zip( d.data._asdict().values() ,list(SCAL) ) ]
