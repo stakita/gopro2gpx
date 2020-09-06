@@ -45,6 +45,8 @@ def BuildGPSPoints(data, skip=False):
     GPSU = None
     SYST = fourCC.SYSTData(0, 0)
 
+    start_time = None
+
     stats = {
         'ok': 0,
         'badfix': 0,
@@ -60,6 +62,9 @@ def BuildGPSPoints(data, skip=False):
             SCAL = d.data
         elif d.fourCC == 'GPSU':
             GPSU = d.data
+            if start_time is None:
+                print('XXX got start_time value:', d.data)
+                start_time = datetime.fromtimestamp(time.mktime(d.data))
         elif d.fourCC == 'GPSF':
             if d.data != GPSFIX:
                 print("GPSFIX change to %s [%s]" % (d.data,fourCC.LabelGPSF.xlate[d.data]))
@@ -148,7 +153,7 @@ def BuildGPSPoints(data, skip=False):
     print("- Empty (No data): %5d" % stats['empty'])
     print("Total points:      %5d" % total_points)
     print("--------------------------")
-    return(points)
+    return(points, start_time)
 
 def parseArgs():
     parser = argparse.ArgumentParser()
@@ -173,7 +178,7 @@ def main():
 
     # build some funky tracks from camera GPS
 
-    points = BuildGPSPoints(data, skip=args.skip)
+    points, start_time = BuildGPSPoints(data, skip=args.skip)
 
     if len(points) == 0:
         print("Can't create file. No GPS info in %s. Exitting" % args.file)
@@ -183,7 +188,8 @@ def main():
     with open("%s.kml" % args.outputfile , "w+") as fd:
         fd.write(kml)
 
-    gpx = gpshelper.generate_GPX(points, trk_name="gopro7-track")
+    print('SMT-200: start time:', repr(start_time))
+    gpx = gpshelper.generate_GPX(points, start_time, trk_name="gopro7-track")
     with open("%s.gpx" % args.outputfile , "w+") as fd:
         fd.write(gpx)
 
