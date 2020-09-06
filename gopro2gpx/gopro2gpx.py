@@ -53,6 +53,7 @@ def BuildGPSPoints(data, skip=False):
     }
 
     GPSFIX = 0 # no lock.
+    GPSFIX_next = 0
     for d in data:
         
         if d.fourCC == 'SCAL':
@@ -62,7 +63,13 @@ def BuildGPSPoints(data, skip=False):
         elif d.fourCC == 'GPSF':
             if d.data != GPSFIX:
                 print("GPSFIX change to %s [%s]" % (d.data,fourCC.LabelGPSF.xlate[d.data]))
-            GPSFIX = d.data
+                print("d.data: ", repr(d.data))
+            GPSFIX = GPSFIX_next
+            # we delay using GPSFIX till next set
+            GPSFIX_next = d.data
+            if GPSFIX_next == 0:
+                # if we just lost fix, don't delay on passing it through
+                GPSFIX = GPSFIX_next
         elif d.fourCC == 'GPS5':
             # we have to use the REPEAT value.
 
