@@ -75,10 +75,20 @@ class Label_TypeUTimeStamp(LabelBase):
 		LabelBase.__init__(self)
 
 	def Build(self, klvdata):
-		s = klvdata.rawdata.decode('utf-8', errors='replace')
-		# 'yymmddhhmmss.sss'
-		fmt = '%y%m%d%H%M%S.%f'
-		return time.strptime(s, fmt)
+		try:
+			s = klvdata.rawdata.decode('utf-8', errors='replace')
+			# 'yymmddhhmmss.sss'
+			fmt = '%y%m%d%H%M%S.%f'
+			return time.strptime(s, fmt)
+		except ValueError as e:
+			print('Label_TypeUTimeStamp.Build - ValueError:')
+			print(repr(klvdata))
+			print(dir(klvdata))
+			print(repr(klvdata.rawdata))
+			# print(dir(klvdata))
+			s = '000101000000.000'
+			fmt = '%y%m%d%H%M%S.%f'
+			return time.strptime(s, fmt)
 
 class LabelDVID(LabelBase):
 	def __init__(self):
