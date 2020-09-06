@@ -348,6 +348,8 @@ labels = {
         "WNDM" : LabelEmpty, ## Window Processing       ## New for Hero8?         
         "MWET" : LabelEmpty, ## Microphone Wet          ## New for Hero8?   
         "AALP" : LabelEmpty, ## AGC Audio Level         ## New for Hero8?		
+		"VPTS" : LabelEmpty,
+		"DISP" : LabelEmpty,
 
         # not defined in document
         "YAVG" : LabelEmpty,
