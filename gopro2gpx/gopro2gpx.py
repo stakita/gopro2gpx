@@ -201,7 +201,7 @@ def main():
 
     print('SMT-200: start time:', repr(start_time))
     gpx = gpshelper.generate_GPX(points, start_time, trk_name="gopro7-track")
-    with open("%s.gpx" % args.outputfile , "w+") as fd:
+    with open("%s" % args.outputfile , "w+") as fd:
         fd.write(gpx)
 
 if __name__ == "__main__":
