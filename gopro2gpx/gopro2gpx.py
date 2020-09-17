@@ -76,9 +76,9 @@ def BuildGPSPoints(data, skip=False):
                 GPSFIX = d.data
             # we delay using GPSFIX till next set
             GPSFIX_next = d.data
-            # if GPSFIX_next == 0:
-            #     # if we just lost fix, don't delay on passing it through
-            #     GPSFIX = GPSFIX_next
+            if GPSFIX_next == 0 or GPSFIX_next == 2:
+                # if we just lost fix, don't delay on passing it through
+                GPSFIX = GPSFIX_next
         elif d.fourCC == 'GPS5':
             # we have to use the REPEAT value.
 
