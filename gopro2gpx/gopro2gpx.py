@@ -96,6 +96,13 @@ def BuildGPSPoints(data, skip=False):
                         stats['badfixskip'] += 1
                         continue
 
+                if GPSFIX == 2:
+                    stats['badfix'] += 1
+                    if skip:
+                        print("Warning: Skipping point due GPSFIX==2")
+                        stats['badfixskip'] += 1
+                        continue
+
                 retdata = [ float(x) / float(y) for x,y in zip( item._asdict().values() ,list(SCAL) ) ]
 
 
