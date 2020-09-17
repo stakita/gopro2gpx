@@ -101,11 +101,11 @@ def BuildGPSPoints(data, skip=False):
 
                 gpsdata = fourCC.GPSData._make(retdata)
                 # print('SMT-000:lat = ' + repr(gpsdata.lat) + ' lon = ' + repr(gpsdata.lon))
-                if last_lat is not None and abs(abs(last_lat) - abs(gpsdata.lat)) > 1.0:
+                if last_lat is not None and abs(abs(last_lat) - abs(gpsdata.lat)) > 0.2:
                     print('BIG LAT SKIP: last_lat = %f  gpsdata.lat = %f' % (last_lat, gpsdata.lat))
                     print('skipping')
                     continue
-                if last_lon is not None and abs(abs(last_lon) - abs(gpsdata.lon)) > 1.0:
+                if last_lon is not None and abs(abs(last_lon) - abs(gpsdata.lon)) > 0.05:
                     print('BIG LON SKIP: last_lon = %f  gpsdata.lon = %f' % (last_lon, gpsdata.lon))
                     print('skipping')
                     continue
